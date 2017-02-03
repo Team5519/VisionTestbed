@@ -1,4 +1,4 @@
-package org.usfirst.frc.team5519.robot;
+package org.usfirst.frc.team5519.robot.vision;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,7 +23,7 @@ import org.opencv.objdetect.*;
 *
 * @author GRIP
 */
-public class PegVisionPipeline {
+public class PegPipeline {
 
 	//Outputs
 	private Mat hslThresholdOutput = new Mat();

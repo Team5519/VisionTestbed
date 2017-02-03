@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.vision.VisionThread;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
-import org.usfirst.frc.team5519.robot.PegVisionPipeline;
+import org.usfirst.frc.team5519.robot.vision.PegPipeline;
 
 
 /**
@@ -60,7 +60,7 @@ public class AxisVision extends Subsystem {
             Mat source = new Mat();
             Mat output = new Mat();
             
-            PegVisionPipeline pipeline = new PegVisionPipeline();
+            PegPipeline pipeline = new PegPipeline();
             
             while(!Thread.interrupted()) {
                 cvSink.grabFrame(source);
