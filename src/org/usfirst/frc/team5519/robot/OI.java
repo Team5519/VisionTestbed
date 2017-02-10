@@ -1,8 +1,11 @@
 package org.usfirst.frc.team5519.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
 
-import org.usfirst.frc.team5519.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5519.robot.commands.AlignBot;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -36,4 +39,26 @@ public class OI {
 	// Start the command when the button is released and let it run the command
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
+	
+	public static final int kDriveStickPort = 0;	
+	public static Joystick driveStick;
+	
+	public static final int kDriveBotButtonNumber = 1;
+	public static Button driveBotButton;
+
+	public static final int kAlignBotButtonNumber = 2;
+	public static Button alignBotButton;
+
+	public OI() {
+		OI.driveStick = new Joystick(kDriveStickPort);
+		
+		//Command driveBot = new DriveBot();
+		OI.driveBotButton = new JoystickButton(OI.driveStick,kDriveBotButtonNumber);
+		//OI.toggleShootHighButton.toggleWhenPressed(driveBot);
+		
+		Command alignBot = new AlignBot();
+		OI.alignBotButton = new JoystickButton(OI.driveStick,kAlignBotButtonNumber);
+		OI.alignBotButton.whenPressed(alignBot);
+	}
+	
 }

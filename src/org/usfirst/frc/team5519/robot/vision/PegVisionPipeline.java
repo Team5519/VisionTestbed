@@ -1,4 +1,5 @@
 package org.usfirst.frc.team5519.robot.vision;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import org.opencv.imgproc.Imgproc;
 	*
 	* @author GRIP
 	*/
-public class VisionPipeline {
+public class PegVisionPipeline {
 
 		//Outputs
 		private Mat hslThresholdOutput = new Mat();

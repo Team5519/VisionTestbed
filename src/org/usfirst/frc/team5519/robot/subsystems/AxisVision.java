@@ -6,11 +6,14 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.vision.VisionThread;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.ArrayList;
 
 import org.opencv.core.Mat;
-import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
+import org.opencv.core.MatOfPoint;
+import org.usfirst.frc.team5519.robot.vision.PegTarget;
+import org.usfirst.frc.team5519.robot.vision.PegVisionPipeline;
 
 
 /**
@@ -23,10 +26,10 @@ public class AxisVision extends Subsystem {
 	
 	private AxisCamera camera;
 	private boolean inVisionMode;
-	private VisionThread visionThread;
 	
 	private final Object imgLock = new Object();
-	private double centerX = 0.0;
+	private double targetAngle = 0.0;
+	private double targetDistance = 99.9;
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -51,46 +54,46 @@ public class AxisVision extends Subsystem {
     	setCameraForVision();
     	
         new Thread(() -> {
-            //AxisCamera camera = CameraServer.getInstance().addAxisCamera("Axis Stream","axis-camera");
-            //camera.setResolution(640, 480);
-            
+            Mat snapshot = new Mat();
             CvSink cvSink = CameraServer.getInstance().getVideo();
-            CvSource outputStream = CameraServer.getInstance().putVideo("Peg Vision", IMG_WIDTH, IMG_HEIGHT);
-            
-            Mat source = new Mat();
-            Mat output = new Mat();
-            /**
-            PegVisionPipeline pipeline = new PegVisionPipeline();
-            
+            CvSource outputStream = CameraServer.getInstance().putVideo("Peg Target", IMG_WIDTH, IMG_HEIGHT);
+            PegVisionPipeline pipeline = new PegVisionPipeline();    
             while(!Thread.interrupted()) {
-                cvSink.grabFrame(source);
-                //Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-                pipeline.process(source);
-                output = pipeline.hslThresholdOutput();
-                outputStream.putFrame(output);
-                Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+                cvSink.grabFrame(snapshot);
+                pipeline.process(snapshot);
+                ArrayList<MatOfPoint> contourDetections = pipeline.filterContoursOutput();
+                SmartDashboard.putNumber("Target Number of Contours", contourDetections.size());
+                PegTarget pegTarget = new PegTarget(contourDetections);
+                synchronized (imgLock) {
+                    targetAngle = pegTarget.estimateAngle();
+                    targetDistance = pegTarget.estimateDistance();
+                }
+                //snapshot = pipeline.hslThresholdOutput();
+                pegTarget.drawBoxOnImage(snapshot);
+                outputStream.putFrame(snapshot);
                 Timer.delay(0.1);
             }
-            */
-            
         }).start();
-
-    	
-        /**
-        visionThread = new VisionThread(camera, new PegVisionPipeline(), pipeline -> {
-            if (!pipeline.filterContoursOutput().isEmpty()) {
-                Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-                synchronized (imgLock) {
-                    centerX = r.x + (r.width / 2);
-                }
-            }
-        });
-        visionThread.start();
-        */
 
     }
     
-    public AxisCamera getCamera() {
+    public double getTargetAngle() {
+    	double angle = 0.0;
+        synchronized (imgLock) {
+           angle =  targetAngle;
+        }
+    	return angle;
+    }
+    
+    public double getTargetDistance() {
+    	double distance = 99.9;
+        synchronized (imgLock) {
+        	distance =  targetDistance;
+        }
+    	return distance;
+    }
+    
+  public AxisCamera getCamera() {
     	return camera;
     }
     
