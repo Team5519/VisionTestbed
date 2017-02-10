@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team5519.robot.vision.PegPipeline;
 
@@ -68,6 +69,7 @@ public class AxisVision extends Subsystem {
                 pipeline.process(source);
                 output = pipeline.hslThresholdOutput();
                 outputStream.putFrame(output);
+                Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
                 Timer.delay(0.1);
             }
         }).start();
