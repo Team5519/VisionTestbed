@@ -21,8 +21,8 @@ public class Robot extends IterativeRobot {
 
 	public static OI oi;
 	
-    public static final DriveBaseAutonomous driveBase = new DriveBaseAutonomous();
-	public static final AxisVision axisVision = new AxisVision();
+    public static DriveBaseAutonomous driveBase;
+	public static AxisVision axisVision;
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -34,6 +34,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		RobotMap.init ();
+		driveBase = new DriveBaseAutonomous();
+		axisVision = new AxisVision();
 		oi = new OI();
 		// chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
@@ -100,6 +102,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		driveBase.Drive(0.0, 0.0);
 	}
 
 	/**
@@ -108,6 +111,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		driveBase.Drive(OI.driveStick);
 		driveBase.dumpAHRSData();
 	}
 

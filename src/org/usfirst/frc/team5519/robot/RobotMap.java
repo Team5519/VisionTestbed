@@ -33,15 +33,15 @@ public class RobotMap {
 		
 		if (isLouise) {
 			// Assign definitions for LOUISE (Test Bot)
-			kFrontLeftMotorPort = 1;	
-			kFrontRightMotorPort = 3;	
+			kFrontLeftMotorPort = 0;	
+			kFrontRightMotorPort = 1;	
 			frontLeftMotor = new Talon(kFrontLeftMotorPort);
 			frontRightMotor = new Talon(kFrontRightMotorPort);
 		} else {
 			// Assign definitions for FARADAY (Competition Bot)
 			// FARADAY will be using VictorSPs and Sparks.
-			kFrontLeftMotorPort = 1;	
-			kFrontRightMotorPort = 3;	
+			kFrontLeftMotorPort = 0;	
+			kFrontRightMotorPort = 1;	
 			frontLeftMotor = new VictorSP(kFrontLeftMotorPort);
 			frontRightMotor = new VictorSP(kFrontRightMotorPort);
 		}

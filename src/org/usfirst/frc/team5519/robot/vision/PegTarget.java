@@ -103,19 +103,19 @@ public class PegTarget {
 	 * Dump key target statistics to the Smart Dashboard.
 	 */
 	public void dumpStatistics() {
-		SmartDashboard.putBoolean(  "Target is Established",        isEstablished);
-		SmartDashboard.putBoolean(  "Target is Complete",        	isComplete);
-		SmartDashboard.putNumber(	"Target Left Edge",				leftEdge);
-		SmartDashboard.putNumber(	"Target Right Edge",			rightEdge);
-		SmartDashboard.putNumber(	"Target Top Edge",				topEdge);
-		SmartDashboard.putNumber(	"Target Bottom Edge",			bottomEdge);
-		SmartDashboard.putNumber(	"Target Aspect Ratio",			aspectRatio);
-		SmartDashboard.putNumber(	"Target Max Area",				maxArea);
-		SmartDashboard.putNumber(	"Target Max Width",				maxWidth);
-		SmartDashboard.putNumber(	"Target Max Height",			maxHeight);
-		SmartDashboard.putNumber(	"Target Estimated Distance",	estimateDistance());
-		SmartDashboard.putNumber(	"Target Centre Position",		centreX);
-		SmartDashboard.putNumber(	"Target Estimated Angle",		estimateAngle());
+		SmartDashboard.putBoolean(  "Target/is Established",        isEstablished);
+		SmartDashboard.putBoolean(  "Target/is Complete",        	isComplete);
+		SmartDashboard.putNumber(	"Target/Left Edge",				leftEdge);
+		SmartDashboard.putNumber(	"Target/Right Edge",			rightEdge);
+		SmartDashboard.putNumber(	"Target/Top Edge",				topEdge);
+		SmartDashboard.putNumber(	"Target/Bottom Edge",			bottomEdge);
+		SmartDashboard.putNumber(	"Target/Aspect Ratio",			aspectRatio);
+		SmartDashboard.putNumber(	"Target/Max Area",				maxArea);
+		SmartDashboard.putNumber(	"Target/Max Width",				maxWidth);
+		SmartDashboard.putNumber(	"Target/Max Height",			maxHeight);
+		SmartDashboard.putNumber(	"Target/Estimated Distance",	estimateDistance());
+		SmartDashboard.putNumber(	"Target/Centre Position",		centreX);
+		SmartDashboard.putNumber(	"Target/Estimated Angle",		estimateAngle());
 	}
 	
 	public void drawBoxOnImage(Mat imgSource) {

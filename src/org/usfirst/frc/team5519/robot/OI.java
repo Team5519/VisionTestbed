@@ -43,10 +43,10 @@ public class OI {
 	public static final int kDriveStickPort = 0;	
 	public static Joystick driveStick;
 	
-	public static final int kDriveBotButtonNumber = 1;
+	public static final int kDriveBotButtonNumber = 2;
 	public static Button driveBotButton;
 
-	public static final int kAlignBotButtonNumber = 2;
+	public static final int kAlignBotButtonNumber = 1;
 	public static Button alignBotButton;
 
 	public OI() {
@@ -58,7 +58,7 @@ public class OI {
 		
 		Command alignBot = new AlignBot();
 		OI.alignBotButton = new JoystickButton(OI.driveStick,kAlignBotButtonNumber);
-		OI.alignBotButton.whenPressed(alignBot);
+		OI.alignBotButton.toggleWhenPressed(alignBot);
 	}
 	
 }

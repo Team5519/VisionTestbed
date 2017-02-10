@@ -62,13 +62,14 @@ public class AxisVision extends Subsystem {
                 cvSink.grabFrame(snapshot);
                 pipeline.process(snapshot);
                 ArrayList<MatOfPoint> contourDetections = pipeline.filterContoursOutput();
-                SmartDashboard.putNumber("Target Number of Contours", contourDetections.size());
+                SmartDashboard.putNumber("Target/Number of Pipeline Contours", contourDetections.size());
                 PegTarget pegTarget = new PegTarget(contourDetections);
                 synchronized (imgLock) {
                     targetAngle = pegTarget.estimateAngle();
                     targetDistance = pegTarget.estimateDistance();
                 }
                 //snapshot = pipeline.hslThresholdOutput();
+                pegTarget.dumpStatistics();
                 pegTarget.drawBoxOnImage(snapshot);
                 outputStream.putFrame(snapshot);
                 Timer.delay(0.1);
