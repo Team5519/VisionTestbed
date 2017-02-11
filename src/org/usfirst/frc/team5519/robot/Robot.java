@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team5519.robot.commands.AutoAlignToPegTarget;
+import org.usfirst.frc.team5519.robot.commands.AutoDeliverGearRight;
+import org.usfirst.frc.team5519.robot.commands.AutoDriveStraightDistance;
+import org.usfirst.frc.team5519.robot.commands.AutoDriveToPegTarget;
 import org.usfirst.frc.team5519.robot.subsystems.AxisVision;
 import org.usfirst.frc.team5519.robot.subsystems.DriveBaseAutonomous;
 
@@ -38,8 +42,11 @@ public class Robot extends IterativeRobot {
 		driveBase = new DriveBaseAutonomous();
 		axisVision = new AxisVision();
 		oi = new OI();
-		// chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
+		
+		chooser.addDefault("Default Auto", new AutoAlignToPegTarget(RobotMap.START_POSITION_LEFT));
+		chooser.addObject("Right Position", new AutoDeliverGearRight());
+		chooser.addObject("Center Position", new AutoDriveToPegTarget());
+		chooser.addObject("Left Position", new AutoDriveStraightDistance(2.0));
 		SmartDashboard.putData("Auto mode", chooser);
 		
 		axisVision.initCameraHardware();
@@ -74,13 +81,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
-
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
