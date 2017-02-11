@@ -36,20 +36,12 @@ public class AxisVision extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
+	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }
     
-    public void setCameraForTeleop() {
-    	camera.setResolution(IMG_WIDTH, IMG_HEIGHT); 
-    	inVisionMode = false;
-    }
-    
-    public void setCameraForVision() {
-    	camera.setResolution(IMG_WIDTH, IMG_HEIGHT); 
-    	inVisionMode = true;
-    }
     
     public void initCameraHardware() {
     	camera = CameraServer.getInstance().addAxisCamera("Axis Stream","axis-camera");
@@ -82,6 +74,19 @@ public class AxisVision extends Subsystem {
 
     }
     
+    
+   public void setCameraForTeleop() {
+    	camera.setResolution(IMG_WIDTH, IMG_HEIGHT); 
+    	inVisionMode = false;
+    }
+   
+    
+    public void setCameraForVision() {
+    	camera.setResolution(IMG_WIDTH, IMG_HEIGHT); 
+    	inVisionMode = true;
+    }
+    
+
     public double getTargetAngle() {
     	double angle = 0.0;
         synchronized (imgLock) {
@@ -89,6 +94,7 @@ public class AxisVision extends Subsystem {
         }
     	return angle;
     }
+    
     
     public double getTargetDistance() {
     	double distance = 99.9;
@@ -98,9 +104,11 @@ public class AxisVision extends Subsystem {
     	return distance;
     }
     
+    
     public boolean isTargetLocked() {
     	return isTargetLocked;
     }
+    
     
     public AxisCamera getCamera() {
     	return camera;

@@ -32,7 +32,7 @@ public class AutoDriveToPegTarget extends Command {
     	moveValue = kFMV;
     	rotateValue = 0.0;
     	sanityCounter = 0;
-    	Robot.driveBase.StopDead();
+    	Robot.driveBase.stopDead();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -44,11 +44,11 @@ public class AutoDriveToPegTarget extends Command {
         		// Slow down for last 1.0 meters
         		moveValue = kSMV;
         	}
-           	Robot.driveBase.DirectDrive(moveValue, rotateValue);
+           	Robot.driveBase.directDrive(moveValue, rotateValue);
     	} else {
     		// Target is NOT locked so increment sanity and use last known good values 
     		++sanityCounter;
-           	Robot.driveBase.DirectDrive(moveValue, rotateValue);
+           	Robot.driveBase.directDrive(moveValue, rotateValue);
     	}
     }
 
@@ -69,7 +69,7 @@ public class AutoDriveToPegTarget extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-       	Robot.driveBase.StopDead();
+       	Robot.driveBase.stopDead();
    }
 
     // Called when another command which requires one or more of the same

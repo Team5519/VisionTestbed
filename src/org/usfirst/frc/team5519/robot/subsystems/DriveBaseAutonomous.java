@@ -6,6 +6,7 @@ import org.usfirst.frc.team5519.robot.commands.DriveWithJoystick;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
@@ -15,14 +16,115 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveBaseAutonomous extends Subsystem {
 	
 	protected RobotDrive myDrive;
-	private boolean underJoystickControl;
 	
     // GyroSamples
     private static final double kP = 0.03;
     AHRS ahrs;
- 
     
-    public void dumpGyroData () {
+    // CIMcoder am-3314a
+    // 2 channel quadrature output, 20 pulses per channel per revolution
+    private static final double kPulsesPerRotation = 20;
+    private static final double kDistancePerPulse = 0.1596; // in meters, 2in diameter wheel, 39.37 inches per meter
+    private Encoder cimCoder;
+    
+    
+    public DriveBaseAutonomous() {
+		myDrive = new RobotDrive(RobotMap.frontLeftMotor, RobotMap.frontRightMotor);
+        myDrive.setSafetyEnabled(true); 	// Ensure motor safety
+        myDrive.setExpiration(0.1);			// Suggested default safety timeout
+        
+        cimCoder = new Encoder(RobotMap.kCIMcoderDioPortA,RobotMap.kCIMcoderDioPortB,false,Encoder.EncodingType.k2X);
+        cimCoder.setDistancePerPulse(kDistancePerPulse);
+        //cimCoder.setMinRate(minRate);
+        //cimCoder.setSamplesToAverage(samplesToAverage);
+        
+        // GyroSamples
+          try {
+              /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
+              /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
+              /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+              ahrs = new AHRS(SPI.Port.kMXP); 
+          } catch (RuntimeException ex ) {
+              DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+          }
+    }
+    
+
+	@Override
+	protected void initDefaultCommand() {
+		// TODO Auto-generated method stub
+		setDefaultCommand(new DriveWithJoystick());
+	}
+    
+    
+    public void resetSensors() {
+		ahrs.reset();
+    	cimCoder.reset();
+    }
+    
+    
+   public double getDistanceTraveled() {
+    	double distance = cimCoder.getDistance();
+    	return ahrs.getDisplacementY();
+    }
+    
+   
+	public void driveStraight(double moveValue) {
+		// GyroSamples
+		double rotateValue = ahrs.getAngle()*kP;
+		directDrive(moveValue, rotateValue);
+	}
+	
+	public void rotateInPlace(double targetAngle) {
+        DriverStation.reportWarning("Drive Rotate Bot rotateAngle:  " + targetAngle, false);
+    	double rotateValue = -0.300;
+    	if (targetAngle < 0.0) {
+    		rotateValue = -1.5 * rotateValue;
+    	}
+		//myDrive.drive(0.08, rotateValue);
+		//myDrive.drive(0.0, rotateValue);
+		myDrive.arcadeDrive(0.001, rotateValue, true);
+	}
+
+
+	/**
+	 * Just Drive! Under joystick command. 
+	 * Code stolen from RobotDrive
+	 * 
+	 * @author GSN - 11/12/2016
+	 */
+	public void drive(GenericHID stick) {
+		SmartDashboard.putNumber(   "Joystick/Y-Axis Value",       stick.getY());
+		SmartDashboard.putNumber(   "Joystick/X-Axis Value",       stick.getX());
+ 		double moveValue = -0.75 * stick.getY();
+		// Correct left / right by inverting X-Axis values.
+		double rotateValue = -0.6 * stick.getX();
+		myDrive.arcadeDrive(moveValue, rotateValue, true);
+	}
+
+	/**
+	 * Drive using direct values. 
+	 * Code stolen from RobotDrive
+	 * 
+	 * @author GSN - 11/12/2016
+	 */
+	 public void directDrive(double moveValue, double rotateValue) {
+	 	myDrive.arcadeDrive(moveValue, rotateValue);			 
+	 }
+	 
+	 public void stopDead() {
+		if (ahrs.getVelocityY() > 0.1) {
+		 	myDrive.arcadeDrive(-0.05, 0);			 			
+		} else if (ahrs.getVelocityY() < -0.1) {
+		 	myDrive.arcadeDrive(0.05, 0);			 			
+		} else {
+		 	myDrive.arcadeDrive(0, 0);			 			
+		}
+	 }
+
+
+	
+    public void dumpSensorData () {
         /* Display 6-axis Processed Angle Data                                      */
         SmartDashboard.putBoolean(  "AHRS/IMU_Connected",        ahrs.isConnected());
         SmartDashboard.putBoolean(  "AHRS/IMU_IsCalibrating",    ahrs.isCalibrating());
@@ -102,98 +204,6 @@ public class DriveBaseAutonomous extends Subsystem {
         SmartDashboard.putNumber(   "AHRS/IMU_Update_Count",     ahrs.getUpdateCount());
 
     }
-    
-    public void ResetGyro() {
-		ahrs.reset();
-    }
-    
-    public double getGyroDistance() {
-    	return ahrs.getDisplacementY();
-    }
-    
-    public DriveBaseAutonomous() {
-		myDrive = new RobotDrive(RobotMap.frontLeftMotor, RobotMap.frontRightMotor);
-		underJoystickControl = true;
-        myDrive.setSafetyEnabled(true); 	// Ensure motor safety
-        myDrive.setExpiration(0.1);			// Suggested default safety timeout
-        // GyroSamples
-          try {
-              /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
-              /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
-              /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
-              ahrs = new AHRS(SPI.Port.kMXP); 
-          } catch (RuntimeException ex ) {
-              DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
-          }
-    }
-    
-    public void enableJoystickControl () {
-    	underJoystickControl = true;
-    }
 
-    public void disableJoystickControl () {
-    	underJoystickControl = false;
-    }
-
-	public void DriveStraight(double moveValue) {
-		// GyroSamples
-		double rotateValue = ahrs.getAngle()*kP;
-		DirectDrive(moveValue, rotateValue);
-	}
 	
-	public void RotateInPlace(double targetAngle) {
-        DriverStation.reportWarning("Drive Rotate Bot rotateAngle:  " + targetAngle, false);
-    	double rotateValue = -0.300;
-    	if (targetAngle < 0.0) {
-    		rotateValue = -1.5 * rotateValue;
-    	}
-		//myDrive.drive(0.08, rotateValue);
-		//myDrive.drive(0.0, rotateValue);
-		myDrive.arcadeDrive(0.001, rotateValue, true);
-	}
-
-
-	/**
-	 * Just Drive! Under joystick command. 
-	 * Code stolen from RobotDrive
-	 * 
-	 * @author GSN - 11/12/2016
-	 */
-	public void Drive(GenericHID stick) {
-		SmartDashboard.putNumber(   "Joystick/Y-Axis Value",       stick.getY());
-		SmartDashboard.putNumber(   "Joystick/X-Axis Value",       stick.getX());
- 		double moveValue = -0.75 * stick.getY();
-		// Correct left / right by inverting X-Axis values.
-		double rotateValue = -0.6 * stick.getX();
-		myDrive.arcadeDrive(moveValue, rotateValue, true);
-	}
-
-	/**
-	 * Drive using direct values. 
-	 * Code stolen from RobotDrive
-	 * 
-	 * @author GSN - 11/12/2016
-	 */
-	 public void DirectDrive(double moveValue, double rotateValue) {
-	 	myDrive.arcadeDrive(moveValue, rotateValue);			 
-	 }
-	 
-	 public void StopDead() {
-		if (ahrs.getVelocityY() > 0.1) {
-		 	myDrive.arcadeDrive(-0.05, 0);			 			
-		} else if (ahrs.getVelocityY() < -0.1) {
-		 	myDrive.arcadeDrive(0.05, 0);			 			
-		} else {
-		 	myDrive.arcadeDrive(0, 0);			 			
-		}
-	 }
-
-
-
-	@Override
-	protected void initDefaultCommand() {
-		// TODO Auto-generated method stub
-		setDefaultCommand(new DriveWithJoystick());
-	}
-
 }

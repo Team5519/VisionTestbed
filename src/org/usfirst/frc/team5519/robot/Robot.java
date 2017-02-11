@@ -103,7 +103,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-		driveBase.StopDead();
+		driveBase.stopDead();
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		driveBase.dumpGyroData();
+		driveBase.dumpSensorData();
 	}
 
 	/**

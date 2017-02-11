@@ -37,6 +37,10 @@ public class RobotMap {
 	public static PWMSpeedController frontLeftMotor;
 	public static PWMSpeedController frontRightMotor;
 	
+	// Digital Input Ports for CIMcoder
+	public final static int kCIMcoderDioPortA = 0;
+	public final static int kCIMcoderDioPortB = 1;
+	
 	public static void init() {
 		
 		if (isLouise) {
