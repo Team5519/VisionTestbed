@@ -1,4 +1,7 @@
-package org.usfirst.frc.team5519.robot;
+package org.usfirst.frc.team5519.robot.subsystems;
+
+import org.usfirst.frc.team5519.robot.RobotMap;
+import org.usfirst.frc.team5519.robot.commands.DriveWithJoystick;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -6,19 +9,20 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriveBaseAutonomous extends DriveBase {
+public class DriveBaseAutonomous extends Subsystem {
 	
 	protected RobotDrive myDrive;
 	private boolean underJoystickControl;
 	
     // GyroSamples
+    private static final double kP = 0.03;
     AHRS ahrs;
-    private int autoCount;
-    private double Kp;
-
-    public void dumpAHRSData () {
+ 
+    
+    public void dumpGyroData () {
         /* Display 6-axis Processed Angle Data                                      */
         SmartDashboard.putBoolean(  "AHRS/IMU_Connected",        ahrs.isConnected());
         SmartDashboard.putBoolean(  "AHRS/IMU_IsCalibrating",    ahrs.isCalibrating());
@@ -99,11 +103,19 @@ public class DriveBaseAutonomous extends DriveBase {
 
     }
     
-    DriveBaseAutonomous() {
+    public void ResetGyro() {
+		ahrs.reset();
+    }
+    
+    public double getGyroDistance() {
+    	return ahrs.getDisplacementY();
+    }
+    
+    public DriveBaseAutonomous() {
 		myDrive = new RobotDrive(RobotMap.frontLeftMotor, RobotMap.frontRightMotor);
 		underJoystickControl = true;
-        //myDrive.setSafetyEnabled(true); 	// Ensure motor safety
-        //myDrive.setExpiration(0.1);			// Suggested default safety timeout
+        myDrive.setSafetyEnabled(true); 	// Ensure motor safety
+        myDrive.setExpiration(0.1);			// Suggested default safety timeout
         // GyroSamples
           try {
               /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
@@ -125,34 +137,11 @@ public class DriveBaseAutonomous extends DriveBase {
 
 	public void DriveStraight(double moveValue) {
 		// GyroSamples
-		ahrs.reset();
-		autoCount = 0;
-		Kp = 0.03;
-		Kp = 0.3;
-		
-		// GyroSamples - Drive Straight for 4 seconds
-		autoCount = autoCount + 1;
-		if (autoCount <= 200) {
-			// 4 seconds * 50Hz = 200 counts
-			double angle = ahrs.getAngle();
-			Drive(-0.5, angle*Kp);
-			// Timer.delay(0.004);
-			// Example Code to turn 90 degrees - Implement Twist???			
-		} else {
-			autoCount = 500;
-			Drive(0.0, 0.0);
-		}		
-		
-		
-		// GyroSamples
-		dumpAHRSData();
-
+		double rotateValue = ahrs.getAngle()*kP;
+		DirectDrive(moveValue, rotateValue);
 	}
 	
 	public void RotateInPlace(double targetAngle) {
-		if (underJoystickControl) {
-			return;
-		}
         DriverStation.reportWarning("Drive Rotate Bot rotateAngle:  " + targetAngle, false);
     	double rotateValue = -0.300;
     	if (targetAngle < 0.0) {
@@ -161,8 +150,6 @@ public class DriveBaseAutonomous extends DriveBase {
 		//myDrive.drive(0.08, rotateValue);
 		//myDrive.drive(0.0, rotateValue);
 		myDrive.arcadeDrive(0.001, rotateValue, true);
-
-
 	}
 
 
@@ -173,9 +160,6 @@ public class DriveBaseAutonomous extends DriveBase {
 	 * @author GSN - 11/12/2016
 	 */
 	public void Drive(GenericHID stick) {
-		if (!underJoystickControl) {
-			return;
-		}
 		SmartDashboard.putNumber(   "Joystick/Y-Axis Value",       stick.getY());
 		SmartDashboard.putNumber(   "Joystick/X-Axis Value",       stick.getX());
  		double moveValue = -0.75 * stick.getY();
@@ -190,11 +174,26 @@ public class DriveBaseAutonomous extends DriveBase {
 	 * 
 	 * @author GSN - 11/12/2016
 	 */
-	 public void Drive(double moveValue, double rotateValue) {
-			if (!underJoystickControl) {
-				return;
-			}
-	 		myDrive.arcadeDrive(moveValue, rotateValue);			 
+	 public void DirectDrive(double moveValue, double rotateValue) {
+	 	myDrive.arcadeDrive(moveValue, rotateValue);			 
 	 }
+	 
+	 public void StopDead() {
+		if (ahrs.getVelocityY() > 0.1) {
+		 	myDrive.arcadeDrive(-0.05, 0);			 			
+		} else if (ahrs.getVelocityY() < -0.1) {
+		 	myDrive.arcadeDrive(0.05, 0);			 			
+		} else {
+		 	myDrive.arcadeDrive(0, 0);			 			
+		}
+	 }
+
+
+
+	@Override
+	protected void initDefaultCommand() {
+		// TODO Auto-generated method stub
+		setDefaultCommand(new DriveWithJoystick());
+	}
 
 }

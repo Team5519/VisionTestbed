@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5519.robot.subsystems.AxisVision;
+import org.usfirst.frc.team5519.robot.subsystems.DriveBaseAutonomous;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -102,7 +103,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-		driveBase.Drive(0.0, 0.0);
+		driveBase.StopDead();
 	}
 
 	/**
@@ -111,8 +112,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		driveBase.Drive(OI.driveStick);
-		driveBase.dumpAHRSData();
+		driveBase.dumpGyroData();
 	}
 
 	/**

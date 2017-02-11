@@ -26,10 +26,12 @@ public class AxisVision extends Subsystem {
 	
 	private AxisCamera camera;
 	private boolean inVisionMode;
+	private Thread visionThread;
 	
 	private final Object imgLock = new Object();
 	private double targetAngle = 0.0;
 	private double targetDistance = 99.9;
+	private boolean isTargetLocked = false;
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -53,7 +55,7 @@ public class AxisVision extends Subsystem {
     	camera = CameraServer.getInstance().addAxisCamera("Axis Stream","axis-camera");
     	setCameraForVision();
     	
-        new Thread(() -> {
+        visionThread = new Thread(() -> {
             Mat snapshot = new Mat();
             CvSink cvSink = CameraServer.getInstance().getVideo();
             CvSource outputStream = CameraServer.getInstance().putVideo("Peg Target", IMG_WIDTH, IMG_HEIGHT);
@@ -67,14 +69,16 @@ public class AxisVision extends Subsystem {
                 synchronized (imgLock) {
                     targetAngle = pegTarget.estimateAngle();
                     targetDistance = pegTarget.estimateDistance();
+                    isTargetLocked = pegTarget.isEstablished();
                 }
                 //snapshot = pipeline.hslThresholdOutput();
                 pegTarget.dumpStatistics();
                 pegTarget.drawBoxOnImage(snapshot);
                 outputStream.putFrame(snapshot);
-                Timer.delay(0.1);
+                //Timer.delay(0.1);
             }
-        }).start();
+        });
+        visionThread.start();
 
     }
     
@@ -94,7 +98,11 @@ public class AxisVision extends Subsystem {
     	return distance;
     }
     
-  public AxisCamera getCamera() {
+    public boolean isTargetLocked() {
+    	return isTargetLocked;
+    }
+    
+    public AxisCamera getCamera() {
     	return camera;
     }
     

@@ -22,6 +22,14 @@ public class RobotMap {
 	// public static int rangefinderModule = 1;
 	
 	public static boolean isLouise = true;		// BE SURE TO SET THIS TO FALSE IF RUNNING ARBOUR!!!
+	
+	public final static int START_POSITION_RIGHT = 0;
+	public final static int START_POSITION_CENTRE = 1;
+	public final static int START_POSITION_LEFT = 2;
+	
+	public final static double FOREWARD_BACK_MODIFIER = -1.0;
+	public final static double LEFT_RIGHT_MODIFIER = 1.0;
+
 
 	public static int kFrontLeftMotorPort;
 	public static int kFrontRightMotorPort;

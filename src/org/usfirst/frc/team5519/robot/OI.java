@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team5519.robot.commands.AlignBot;
+import org.usfirst.frc.team5519.robot.commands.AutoDeliverGearRight;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -43,22 +44,16 @@ public class OI {
 	public static final int kDriveStickPort = 0;	
 	public static Joystick driveStick;
 	
-	public static final int kDriveBotButtonNumber = 2;
-	public static Button driveBotButton;
+	public static final int kDeliverGearButtonNumber = 1;
+	public static Button deliverGearButton;
 
-	public static final int kAlignBotButtonNumber = 1;
-	public static Button alignBotButton;
 
 	public OI() {
 		OI.driveStick = new Joystick(kDriveStickPort);
 		
-		//Command driveBot = new DriveBot();
-		OI.driveBotButton = new JoystickButton(OI.driveStick,kDriveBotButtonNumber);
-		//OI.toggleShootHighButton.toggleWhenPressed(driveBot);
-		
-		Command alignBot = new AlignBot();
-		OI.alignBotButton = new JoystickButton(OI.driveStick,kAlignBotButtonNumber);
-		OI.alignBotButton.toggleWhenPressed(alignBot);
+		Command deliverGear = new AutoDeliverGearRight();
+		OI.deliverGearButton = new JoystickButton(OI.driveStick,kDeliverGearButtonNumber);
+		OI.deliverGearButton.toggleWhenPressed(deliverGear);
 	}
 	
 }
