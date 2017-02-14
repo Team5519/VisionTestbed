@@ -64,8 +64,8 @@ public class DriveBaseAutonomous extends Subsystem {
     
     
    public double getDistanceTraveled() {
-    	double distance = cimCoder.getDistance();
-    	return ahrs.getDisplacementY();
+    	//return ahrs.getDisplacementY();
+    	return cimCoder.getDistance();
     }
     
    
@@ -79,7 +79,8 @@ public class DriveBaseAutonomous extends Subsystem {
         DriverStation.reportWarning("Drive Rotate Bot rotateAngle:  " + targetAngle, false);
     	double rotateValue = -0.300;
     	if (targetAngle < 0.0) {
-    		rotateValue = -1.5 * rotateValue;
+    		rotateValue = -1.3 * rotateValue;
+            DriverStation.reportWarning("Rotate in place applying CORRECTION.", false);
     	}
 		//myDrive.drive(0.08, rotateValue);
 		//myDrive.drive(0.0, rotateValue);
@@ -108,7 +109,13 @@ public class DriveBaseAutonomous extends Subsystem {
 	 * 
 	 * @author GSN - 11/12/2016
 	 */
-	 public void directDrive(double moveValue, double rotateValue) {
+	 public void directDrive(double moveValue, double targetAngle) {
+	        DriverStation.reportWarning("Drive Rotate Bot rotateAngle:  " + targetAngle, false);
+	    	double rotateValue = -0.200;
+	    	if (targetAngle < 0.0) {
+	    		rotateValue = -1.3 * rotateValue;
+	            DriverStation.reportWarning("Rotate in place applying CORRECTION.", false);
+	    	}
 	 	myDrive.arcadeDrive(moveValue, rotateValue);			 
 	 }
 	 

@@ -37,6 +37,8 @@ public class RobotMap {
 	public static PWMSpeedController frontLeftMotor;
 	public static PWMSpeedController frontRightMotor;
 	
+	public static PWMSpeedController sweeperMotor;
+	
 	// Digital Input Ports for CIMcoder
 	public final static int kCIMcoderDioPortA = 0;
 	public final static int kCIMcoderDioPortB = 1;
@@ -57,6 +59,8 @@ public class RobotMap {
 			frontLeftMotor = new VictorSP(kFrontLeftMotorPort);
 			frontRightMotor = new VictorSP(kFrontRightMotorPort);
 		}
+		
+		sweeperMotor = new VictorSP(9);
 
 		// CY 1/17/2017
 		// Test to see if this makes a difference.

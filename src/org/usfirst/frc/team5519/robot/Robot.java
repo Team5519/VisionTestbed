@@ -1,7 +1,9 @@
 
 package org.usfirst.frc.team5519.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -30,7 +32,8 @@ public class Robot extends IterativeRobot {
 	public static AxisVision axisVision;
 
 	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
+	//SendableChooser<Command> chooser = new SendableChooser<>();
+	SendableChooser<String> chooser = new SendableChooser<>();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -42,12 +45,13 @@ public class Robot extends IterativeRobot {
 		driveBase = new DriveBaseAutonomous();
 		axisVision = new AxisVision();
 		oi = new OI();
-		
-		chooser.addDefault("Default Auto", new AutoAlignToPegTarget(RobotMap.START_POSITION_LEFT));
-		chooser.addObject("Right Position", new AutoDeliverGearRight());
-		chooser.addObject("Center Position", new AutoDriveToPegTarget());
-		chooser.addObject("Left Position", new AutoDriveStraightDistance(2.0));
-		SmartDashboard.putData("Auto mode", chooser);
+		/**
+		chooser.addObject("Default Auto", new AutoDeliverGearRight());
+		chooser.addDefault("Align To Peg", new AutoAlignToPegTarget(RobotMap.START_POSITION_LEFT));
+		chooser.addObject("Drive To Peg", new AutoDriveToPegTarget());
+		chooser.addObject("Drive Straight", new AutoDriveStraightDistance(2.0));
+		SmartDashboard.putData("Select Auto", chooser);
+		*/
 		
 		axisVision.initCameraHardware();
 	}
@@ -80,11 +84,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		//autonomousCommand = chooser.getSelected();
+		String autoCommand = SmartDashboard.getString("Auto Selector","Default Auto");
+        DriverStation.reportWarning("AUTONOMOUS COMMAND = " + autoCommand, false);
 
 		// schedule the autonomous command (example)
+		/*
 		if (autonomousCommand != null)
 			autonomousCommand.start();
+		*/
 	}
 
 	/**
@@ -113,6 +121,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		driveBase.dumpSensorData();
+		//RobotMap.sweeperMotor.set(1.0);
 	}
 
 	/**

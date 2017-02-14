@@ -29,6 +29,8 @@ public class AutoDeliverGearRight extends CommandGroup {
         // arm.
     	addSequential(new AutoDriveStraightDistance(3.0));
     	addSequential(new AutoAlignToPegTarget(RobotMap.START_POSITION_RIGHT));
+    	// Second Align Call to correct overshoot.
+    	addSequential(new AutoAlignToPegTarget(RobotMap.START_POSITION_RIGHT));
     	addSequential(new AutoDriveToPegTarget());
     }
 }

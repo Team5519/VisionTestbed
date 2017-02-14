@@ -6,7 +6,11 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team5519.robot.commands.AlignBot;
+import org.usfirst.frc.team5519.robot.commands.AutoAlignToPegTarget;
 import org.usfirst.frc.team5519.robot.commands.AutoDeliverGearRight;
+import org.usfirst.frc.team5519.robot.commands.AutoDriveStraightDistance;
+import org.usfirst.frc.team5519.robot.commands.AutoDriveToPegTarget;
+import org.usfirst.frc.team5519.robot.commands.CameraToggleSettings;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -46,6 +50,15 @@ public class OI {
 	
 	public static final int kDeliverGearButtonNumber = 1;
 	public static Button deliverGearButton;
+	public static final int kAlignToGearButtonNumber = 7;
+	public static Button alignToGearButton;
+	public static final int kDriveToGearButtonNumber = 10;
+	public static Button driveToGearButton;
+	public static final int kDriveStraightGearButtonNumber = 11;
+	public static Button driveStraightGearButton;
+
+	public static final int kToggleVisionButtonNumber = 2;
+	public static Button toggleVisionButton;
 
 
 	public OI() {
@@ -54,6 +67,23 @@ public class OI {
 		Command deliverGear = new AutoDeliverGearRight();
 		OI.deliverGearButton = new JoystickButton(OI.driveStick,kDeliverGearButtonNumber);
 		OI.deliverGearButton.toggleWhenPressed(deliverGear);
+
+		Command alighToGear = new AutoAlignToPegTarget(RobotMap.START_POSITION_LEFT);
+		OI.alignToGearButton = new JoystickButton(OI.driveStick,kAlignToGearButtonNumber);
+		OI.alignToGearButton.toggleWhenPressed(alighToGear);
+
+		Command driveToGear = new AutoDriveToPegTarget();
+		OI.driveToGearButton = new JoystickButton(OI.driveStick,kDriveToGearButtonNumber);
+		OI.driveToGearButton.toggleWhenPressed(driveToGear);
+
+		Command driveStraight = new AutoDriveStraightDistance(2.0);
+		OI.driveStraightGearButton = new JoystickButton(OI.driveStick,kDriveStraightGearButtonNumber);
+		OI.driveStraightGearButton.toggleWhenPressed(driveStraight);
+
+		Command toggleVision = new CameraToggleSettings();
+		OI.toggleVisionButton = new JoystickButton(OI.driveStick,kToggleVisionButtonNumber);
+		OI.toggleVisionButton.toggleWhenPressed(toggleVision);
+
 	}
 	
 }

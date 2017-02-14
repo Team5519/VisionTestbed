@@ -132,6 +132,7 @@ public class PegTarget {
 	 */
 	public double estimateAngle() {
 		double angle = 0.0;
+		angle = 2.0;		// Quick fix for Align To Peg Command isFinished
 		if (isEstablished) {
 			double horizontalViewAngle = 67.0;			// 67 degrees from published specs;
 			double horizontalResolution = 320.0;		// Resolution is 320x240 pixels;

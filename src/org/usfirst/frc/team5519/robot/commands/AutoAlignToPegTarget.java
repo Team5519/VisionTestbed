@@ -36,12 +36,12 @@ public class AutoAlignToPegTarget extends Command {
     		// Target is not in vision so we have to rotate a bit in order to bring the target into view
     		// Direction of rotation depends on what side of the target (we think) we are on.
         	if (sideTargetToBot == RobotMap.START_POSITION_RIGHT) {
-        		// We are on the right side of the target so we need to rotate left.
-        		angleToTarget = -30.0;      		
+        		// We are on the right side of the target so we need to rotate left. (Counter Clockwise)
+        		angleToTarget = +30.0;      		
         	} else {
         		// We are on the left side of the target so we need to rotate left.
-        		// Note: If we started in the CENTRE we drifted for some reason so rotate left (and hope).
-        		angleToTarget = +30.0;      		
+        		// Note: If we started in the CENTRE we drifted for some reason so rotate right (Clockwise) (and hope) ( Clockwise).
+        		angleToTarget = -30.0;      		
          	}
     	}
     	Robot.driveBase.rotateInPlace(angleToTarget);
