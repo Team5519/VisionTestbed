@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team5519.robot.commands.AssistDeliverGear;
 import org.usfirst.frc.team5519.robot.commands.AutoAlignToPegTarget;
-import org.usfirst.frc.team5519.robot.commands.AutoDeliverGearRight;
+import org.usfirst.frc.team5519.robot.commands.AutoDeliverGear;
 import org.usfirst.frc.team5519.robot.commands.AutoDriveStraightDistance;
 import org.usfirst.frc.team5519.robot.commands.AutoDriveToPegTarget;
 import org.usfirst.frc.team5519.robot.subsystems.AxisVision;
@@ -33,7 +34,7 @@ public class Robot extends IterativeRobot {
 
 	Command autonomousCommand;
 	//SendableChooser<Command> chooser = new SendableChooser<>();
-	SendableChooser<String> chooser = new SendableChooser<>();
+	//SendableChooser<String> chooser = new SendableChooser<>();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -85,14 +86,25 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		//autonomousCommand = chooser.getSelected();
-		String autoCommand = SmartDashboard.getString("Auto Selector","Default Auto");
-        DriverStation.reportWarning("AUTONOMOUS COMMAND = " + autoCommand, false);
-
-		// schedule the autonomous command (example)
-		/*
+		String autoSelected = SmartDashboard.getString("Auto Selector","Default");
+        DriverStation.reportWarning("AUTONOMOUS COMMAND = " + autoSelected, false);
+		switch(autoSelected) { 
+			case "L1": 
+				autonomousCommand = new AutoDeliverGear(RobotMap.START_POSITION_LEFT); 
+				break; 
+			case "R1": 
+				autonomousCommand = new AutoDeliverGear(RobotMap.START_POSITION_RIGHT); 
+				break; 
+			case "C1": 
+				autonomousCommand = new AssistDeliverGear(); 
+				break; 
+			case "Default": 
+			default:
+				autonomousCommand = new AutoDriveStraightDistance(2.0); 
+				break; 
+		}
 		if (autonomousCommand != null)
 			autonomousCommand.start();
-		*/
 	}
 
 	/**

@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class AutoDriveStraightDistance extends Command {
 
-	private static final double kFMV = 0.3;		// FAST move value
-	private static final double kSMV = 0.2;	// SLOW move value
+	private static final double kFMV = 0.5;		// FAST move value
+	private static final double kSMV = 0.20;	// SLOW move value
 	
 	private double requiredDistance;
 	
@@ -30,14 +30,18 @@ public class AutoDriveStraightDistance extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        DriverStation.reportWarning("COMMAND DriveStraightDistance ireported distance is = " + Robot.driveBase.getDistanceTraveled(), false);
-    	//Robot.driveBase.driveStraight(kFMV);
+        DriverStation.reportWarning("COMMAND DriveStraightDistance reported distance is = " + Robot.driveBase.getDistanceTraveled(), false);
+        if (Math.abs(Robot.driveBase.getDistanceTraveled()) > (requiredDistance-0.25)) {
+        	//Robot.driveBase.driveStraight(kSMV);
+        } else {
+        	//Robot.driveBase.driveStraight(kFMV);
+        }
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	if (Robot.driveBase.getDistanceTraveled() >= requiredDistance) {
-            DriverStation.reportWarning("COMMAND DriveStraightDistance ireported distance is = " + Robot.driveBase.getDistanceTraveled(), false);
+    	if (Math.abs(Robot.driveBase.getDistanceTraveled()) >= requiredDistance) {
+            DriverStation.reportWarning("COMMAND DriveStraightDistance ARRIVED distance is = " + Robot.driveBase.getDistanceTraveled(), false);
     		return true;
     	}
         return false;

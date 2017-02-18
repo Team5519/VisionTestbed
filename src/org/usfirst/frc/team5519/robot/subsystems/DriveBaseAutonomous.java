@@ -18,13 +18,13 @@ public class DriveBaseAutonomous extends Subsystem {
 	protected RobotDrive myDrive;
 	
     // GyroSamples
-    private static final double kP = 0.03;
+    private static final double kP = -0.03;
     AHRS ahrs;
     
     // CIMcoder am-3314a
     // 2 channel quadrature output, 20 pulses per channel per revolution
     private static final double kPulsesPerRotation = 20;
-    private static final double kDistancePerPulse = 0.1596; // in meters, 2in diameter wheel, 39.37 inches per meter
+    private static final double kDistancePerPulse = 0.018; // in meters, 32.3 cm divided by 10 pulses
     private Encoder cimCoder;
     
     
@@ -71,7 +71,7 @@ public class DriveBaseAutonomous extends Subsystem {
    
 	public void driveStraight(double moveValue) {
 		// GyroSamples
-		double rotateValue = ahrs.getAngle()*kP;
+		double rotateValue = ahrs.getAngle()* kP;
 		directDrive(moveValue, rotateValue);
 	}
 	
@@ -110,12 +110,12 @@ public class DriveBaseAutonomous extends Subsystem {
 	 * @author GSN - 11/12/2016
 	 */
 	 public void directDrive(double moveValue, double targetAngle) {
-	        DriverStation.reportWarning("Drive Rotate Bot rotateAngle:  " + targetAngle, false);
-	    	double rotateValue = -0.200;
-	    	if (targetAngle < 0.0) {
-	    		rotateValue = -1.3 * rotateValue;
-	            DriverStation.reportWarning("Rotate in place applying CORRECTION.", false);
-	    	}
+		//DriverStation.reportWarning("Drive Rotate Bot rotateAngle:  " + targetAngle, false);
+	    double rotateValue = -0.200;
+	    if (targetAngle < 0.0) {
+	    	rotateValue = -1.3 * rotateValue;
+	        //DriverStation.reportWarning("Rotate in place applying CORRECTION.", false);
+	    }
 	 	myDrive.arcadeDrive(moveValue, rotateValue);			 
 	 }
 	 

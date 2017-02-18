@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team5519.robot.commands.AlignBot;
 import org.usfirst.frc.team5519.robot.commands.AutoAlignToPegTarget;
-import org.usfirst.frc.team5519.robot.commands.AutoDeliverGearRight;
+import org.usfirst.frc.team5519.robot.commands.AutoDeliverGear;
 import org.usfirst.frc.team5519.robot.commands.AutoDriveStraightDistance;
 import org.usfirst.frc.team5519.robot.commands.AutoDriveToPegTarget;
 import org.usfirst.frc.team5519.robot.commands.CameraToggleSettings;
@@ -50,11 +50,11 @@ public class OI {
 	
 	public static final int kDeliverGearButtonNumber = 1;
 	public static Button deliverGearButton;
-	public static final int kAlignToGearButtonNumber = 7;
+	public static final int kAlignToGearButtonNumber = 11;
 	public static Button alignToGearButton;
 	public static final int kDriveToGearButtonNumber = 10;
 	public static Button driveToGearButton;
-	public static final int kDriveStraightGearButtonNumber = 11;
+	public static final int kDriveStraightGearButtonNumber = 7;
 	public static Button driveStraightGearButton;
 
 	public static final int kToggleVisionButtonNumber = 2;
@@ -64,7 +64,7 @@ public class OI {
 	public OI() {
 		OI.driveStick = new Joystick(kDriveStickPort);
 		
-		Command deliverGear = new AutoDeliverGearRight();
+		Command deliverGear = new AutoDeliverGear(RobotMap.START_POSITION_LEFT);
 		OI.deliverGearButton = new JoystickButton(OI.driveStick,kDeliverGearButtonNumber);
 		OI.deliverGearButton.toggleWhenPressed(deliverGear);
 
