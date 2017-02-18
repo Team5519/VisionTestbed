@@ -12,8 +12,8 @@ public class AutoDriveToPegTarget extends Command {
 	
 	private static final double  kFMV = 0.5;					// Initial FAST move value
 	private static final double  kSMV = 0.25;					// Initial SLOW move value
-	private static final double  kMIN_TARGET_DISTANCE = 0.75;	// Target distance limit for isFinished
-	private static final double  kCLOSE_TARGET_DISTANCE = 1.5;	// Target distance limit for slower approach speed
+	private static final double  kMIN_TARGET_DISTANCE = 0.5;	// Target distance limit for isFinished
+	private static final double  kCLOSE_TARGET_DISTANCE = 1.25;	// Target distance limit for slower approach speed
 	private double moveValue;
 	private double rotateAngle;
 	

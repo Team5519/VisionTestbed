@@ -32,9 +32,9 @@ public class AutoDriveStraightDistance extends Command {
     protected void execute() {
         DriverStation.reportWarning("COMMAND DriveStraightDistance reported distance is = " + Robot.driveBase.getDistanceTraveled(), false);
         if (Math.abs(Robot.driveBase.getDistanceTraveled()) > (requiredDistance-0.25)) {
-        	//Robot.driveBase.driveStraight(kSMV);
+        	Robot.driveBase.driveStraight(kSMV);
         } else {
-        	//Robot.driveBase.driveStraight(kFMV);
+        	Robot.driveBase.driveStraight(kFMV);
         }
     }
 
