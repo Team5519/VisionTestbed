@@ -27,7 +27,7 @@ public class AutoDeliverGear extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new AutoDriveStraightDistance(3.5));
+    	addSequential(new AutoDriveStraightDistance(3.0));
     	addSequential(new AutoAlignToPegTarget(RobotMap.START_POSITION_LEFT));
     	// Second Align Call to correct overshoot.
     	addSequential(new AutoAlignToPegTarget(RobotMap.START_POSITION_LEFT));

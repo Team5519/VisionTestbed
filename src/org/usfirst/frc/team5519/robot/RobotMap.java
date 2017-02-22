@@ -2,6 +2,7 @@ package org.usfirst.frc.team5519.robot;
 
 import edu.wpi.first.wpilibj.PWMSpeedController;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 
 /**
@@ -21,7 +22,7 @@ public class RobotMap {
 	// public static int rangefinderPort = 1;
 	// public static int rangefinderModule = 1;
 	
-	public static boolean isLouise = true;		// BE SURE TO SET THIS TO FALSE IF RUNNING ARBOUR!!!
+	public static boolean isLouise = false;		// BE SURE TO SET THIS TO FALSE IF RUNNING ARBOUR!!!
 	
 	public final static int START_POSITION_RIGHT = 0;
 	public final static int START_POSITION_CENTRE = 1;
@@ -49,15 +50,15 @@ public class RobotMap {
 			// Assign definitions for LOUISE (Test Bot)
 			kFrontLeftMotorPort = 0;	
 			kFrontRightMotorPort = 1;	
-			frontLeftMotor = new Talon(kFrontLeftMotorPort);
-			frontRightMotor = new Talon(kFrontRightMotorPort);
+			frontLeftMotor = new VictorSP(kFrontLeftMotorPort);
+			frontRightMotor = new VictorSP(kFrontRightMotorPort);
 		} else {
 			// Assign definitions for FARADAY (Competition Bot)
 			// FARADAY will be using VictorSPs and Sparks.
 			kFrontLeftMotorPort = 0;	
 			kFrontRightMotorPort = 1;	
-			frontLeftMotor = new VictorSP(kFrontLeftMotorPort);
-			frontRightMotor = new VictorSP(kFrontRightMotorPort);
+			frontLeftMotor = new Victor(kFrontLeftMotorPort);
+			frontRightMotor = new Victor(kFrontRightMotorPort);
 		}
 		
 		sweeperMotor = new VictorSP(9);
