@@ -53,7 +53,9 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Drive Straight", new AutoDriveStraightDistance(2.0));
 		SmartDashboard.putData("Select Auto", chooser);
 		*/
-		
+		SmartDashboard.putString("Auto List", "Test Autio 1");
+		SmartDashboard.putString("Auto List", "Test Autio 2");
+				
 		axisVision.initCameraHardware();
 	}
 
